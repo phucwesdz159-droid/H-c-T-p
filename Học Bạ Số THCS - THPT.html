@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Học Bạ THCS - THPT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <style>
+        :root {
+            --m3-primary: #006495;
+            --m3-surface: #f8fdff;
+            --m3-container: #eff4f9;
+            --m3-outline: #71787e;
+            --gold: #FFD700;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: 'Google Sans', sans-serif;
+            background-color: var(--m3-surface);
+            margin: 0; padding: 12px;
+            display: flex; justify-content: center;
+        }
+
+        .m3-wrapper { width: 100%; max-width: 480px; padding-bottom: 240px; }
+
+        .app-header { display: flex; align-items: center; gap: 10px; margin: 10px 0 20px; }
+        .app-header h1 { font-size: 22px; font-weight: 500; margin: 0; color: var(--m3-primary); }
+
+        /* Profile Section */
+        .profile-card {
+            background: var(--m3-container);
+            border-radius: 28px; padding: 20px; margin-bottom: 16px;
+        }
+
+        input, select {
+            width: 100%; background: #fff; border: 1px solid var(--m3-outline);
+            border-radius: 12px; padding: 12px; font-family: inherit; font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        /* 3 Main Tabs */
+        .nav-tabs {
+            display: flex; background: #e0e2e6; border-radius: 20px; padding: 4px; margin-bottom: 20px;
+        }
+        .tab-btn {
+            flex: 1; border: none; background: none; padding: 12px 2px;
+            font-weight: 700; font-size: 13px; border-radius: 16px; cursor: pointer;
+            color: var(--m3-outline); transition: 0.2s;
+        }
+        .tab-btn.active { background: var(--m3-primary); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        /* Subject Card */
+        .subject-card {
+            background: #fff; border-radius: 24px; padding: 16px; margin-bottom: 12px;
+            border: 1px solid #e1e3e5;
+        }
+        .sub-name { font-weight: 700; font-size: 16px; color: var(--m3-primary); display: block; margin-bottom: 10px;}
+        
+        .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr 65px; gap: 8px; align-items: center; }
+
+        .m3-input {
+            background: var(--m3-container); border: none; border-radius: 12px;
+            padding: 12px 4px; text-align: center; font-weight: 700; font-size: 16px; width: 100%;
+        }
+
+        .avg-badge {
+            background: #d1e4ff; color: #001d36;
+            text-align: center; font-weight: 700; border-radius: 12px; padding: 12px 0;
+        }
+
+        /* Year Summary Row */
+        .year-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 18px; background: #fff; border-radius: 20px; margin-bottom: 10px;
+            border: 1px solid #eee;
+        }
+
+        /* Bottom Floating Panel */
+        .bottom-panel {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #fff; border-radius: 32px 32px 0 0;
+            padding: 20px 24px 35px; box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+            max-width: 480px; margin: 0 auto; z-index: 100;
+        }
+
+        .summary-info { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; }
+        .gpa-num { font-size: 45px; font-weight: 700; color: var(--m3-primary); line-height: 1; }
+        
+        .honor-label {
+            padding: 14px; border-radius: 18px; text-align: center;
+            font-weight: 700; font-size: 15px; background: var(--m3-container);
+        }
+        .rank-gold { background: var(--gold); color: #000; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3); }
+        .rank-blue { background: #d1e4ff; color: #00497e; }
+        
+        .btn-export {
+            position: absolute; top: -20px; right: 25px;
+            background: var(--m3-primary); color: white; width: 50px; height: 50px;
+            border-radius: 15px; border: none; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="m3-wrapper">
+    <div class="app-header">
+        <span class="material-symbols-rounded" style="font-size: 30px; color: var(--m3-primary);">edit_document</span>
+        <h1>Học Bạ THCS - THPT</h1>
+    </div>
+
+    <div class="profile-card">
+        <input type="text" id="stu_name" placeholder="Họ tên học sinh" oninput="saveInfo()">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <select id="stu_grade" onchange="changeGrade()">
+                <optgroup label="Cấp THCS">
+                    <option value="6">Lớp 6</option><option value="7">Lớp 7</option>
+                    <option value="8">Lớp 8</option><option value="9">Lớp 9</option>
+                </optgroup>
+                <optgroup label="Cấp THPT">
+                    <option value="10">Lớp 10</option><option value="11">Lớp 11</option><option value="12">Lớp 12</option>
+                </optgroup>
+            </select>
+            <select id="stu_rl" onchange="saveAndCalc()">
+                <option value="TOT">Rèn luyện: Tốt</option>
+                <option value="KHA">Rèn luyện: Khá</option>
+                <option value="DAT">Rèn luyện: Đạt</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="setPeriod('hk1', this)">HỌC KÌ 1</button>
+        <button class="tab-btn" onclick="setPeriod('hk2', this)">HỌC KÌ 2</button>
+        <button class="tab-btn" onclick="setPeriod('year', this)">CẢ NĂM</button>
+    </div>
+
+    <div id="main-list"></div>
+</div>
+
+<div class="bottom-panel">
+    <button class="btn-export" onclick="alert('Đã lưu dữ liệu vào máy!')">
+        <span class="material-symbols-rounded">save</span>
+    </button>
+    <div class="summary-info">
+        <div>
+            <div style="font-weight: 700; color: var(--m3-outline); font-size: 12px; letter-spacing: 0.5px;" id="gpa-title">ĐIỂM TRUNG BÌNH HK1</div>
+            <div style="font-size: 11px; color: #999; margin-top: 4px;" id="sub-info">Cập nhật tự động</div>
+        </div>
+        <div class="gpa-num" id="gpa-val">--</div>
+    </div>
+    <div id="honor-tag" class="honor-label">Nhập điểm để xét học lực</div>
+</div>
+
+<script>
+    const subConfig = {
+        thcs: ["Toán", "Ngữ văn", "Ngoại ngữ 1", "KHTN", "Sử & Địa", "GDCD", "Công nghệ", "Tin học"],
+        thpt: ["Toán", "Ngữ văn", "Ngoại ngữ 1", "Vật lí", "Hóa học", "Sinh học", "Lịch sử", "Địa lí", "GDKT-PL"]
+    };
+
+    let period = 'hk1';
+
+    function setPeriod(p, btn) {
+        period = p;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('gpa-title').innerText = p === 'year' ? 'ĐIỂM TRUNG BÌNH CẢ NĂM' : `ĐIỂM TRUNG BÌNH ${p.toUpperCase()}`;
+        render();
+    }
+
+    function render() {
+        const grade = parseInt(document.getElementById('stu_grade').value);
+        const subjects = grade <= 9 ? subConfig.thcs : subConfig.thpt;
+        const container = document.getElementById('main-list');
+        container.innerHTML = '';
+
+        if (period === 'year') {
+            subjects.forEach((name, i) => {
+                const v1 = getStaticAvg('hk1', i);
+                const v2 = getStaticAvg('hk2', i);
+                const vy = (v1 && v2) ? ((v1 + v2 * 2) / 3).toFixed(1) : "--";
+                container.innerHTML += `
+                    <div class="year-row">
+                        <span style="font-weight:700">${name}</span>
+                        <div style="text-align:right">
+                            <span style="color:#999; font-size:12px">K1: ${v1||'-'} | K2: ${v2||'-'}</span><br>
+                            <span style="color:var(--m3-primary); font-weight:700; font-size:18px">${vy}</span>
+                        </div>
+                    </div>`;
+            });
+            calcYearly();
+        } else {
+            subjects.forEach((name, i) => {
+                const card = document.createElement('div');
+                card.className = 'subject-card';
+                card.innerHTML = `
+                    <span class="sub-name">${name}</span>
+                    <div class="score-grid">
+                        ${[0,1,2,3].map(n => `<input type="number" step="0.1" inputmode="decimal" class="m3-input i-tx" data-sub="${i}" placeholder="TX" oninput="saveAndCalc()">`).join('')}
+                    </div>
+                    <div class="action-grid">
+                        <input type="number" step="0.1" inputmode="decimal" class="m3-input i-gk" data-sub="${i}" placeholder="GK" oninput="saveAndCalc()">
+                        <input type="number" step="0.1" inputmode="decimal" class="m3-input i-ck" data-sub="${i}" placeholder="CK" oninput="saveAndCalc()">
+                        <div class="avg-badge" id="avg_${i}">--</div>
+                    </div>`;
+                container.appendChild(card);
+            });
+            loadScores();
+        }
+    }
+
+    function saveAndCalc() {
+        const grade = document.getElementById('stu_grade').value;
+        let totalGPA = 0, count = 0, subAvgs = [];
+
+        document.querySelectorAll('.subject-card').forEach((card, i) => {
+            const txs = card.querySelectorAll('.i-tx');
+            const gk = card.querySelector('.i-gk').value;
+            const ck = card.querySelector('.i-ck').value;
+
+            let s = 0, c = 0;
+            txs.forEach(inp => { if(inp.value) { s += parseFloat(inp.value); c++; } });
+
+            let avg = 0;
+            if(gk && ck) avg = (s + gk*2 + ck*3) / (c + 5);
+            else if(c > 0) avg = s / c;
+
+            const badge = document.getElementById(`avg_${i}`);
+            if(avg > 0) {
+                const v = parseFloat(avg.toFixed(1));
+                badge.innerText = v;
+                badge.dataset.val = v;
+                totalGPA += v; count++;
+                subAvgs.push({score: v});
+            } else { badge.innerText = "--"; badge.dataset.val = ""; }
+        });
+
+        const final = count > 0 ? (totalGPA / count).toFixed(1) : "--";
+        document.getElementById('gpa-val').innerText = final;
+        
+        // Save
+        const data = [];
+        document.querySelectorAll('.subject-card').forEach(card => {
+            data.push({
+                tx: Array.from(card.querySelectorAll('.i-tx')).map(inp => inp.value),
+                gk: card.querySelector('.i-gk').value,
+                ck: card.querySelector('.i-ck').value
+            });
+        });
+        localStorage.setItem(`scores_${period}_${grade}`, JSON.stringify(data));
+        evaluate(parseFloat(final), subAvgs);
+        saveInfo();
+    }
+
+    function calcYearly() {
+        const grade = document.getElementById('stu_grade').value;
+        const s1 = JSON.parse(localStorage.getItem(`scores_hk1_${grade}`)) || [];
+        const s2 = JSON.parse(localStorage.getItem(`scores_hk2_${grade}`)) || [];
+        let total = 0, count = 0, yearSubs = [];
+
+        s1.forEach((_, i) => {
+            const v1 = getStaticAvg('hk1', i);
+            const v2 = getStaticAvg('hk2', i);
+            if(v1 && v2) {
+                const vy = parseFloat(((v1 + v2 * 2) / 3).toFixed(1));
+                total += vy; count++;
+                yearSubs.push({score: vy});
+            }
+        });
+
+        const final = count > 0 ? (total / count).toFixed(1) : "--";
+        document.getElementById('gpa-val').innerText = final;
+        evaluate(parseFloat(final), yearSubs);
+    }
+
+    function getStaticAvg(p, idx) {
+        const grade = document.getElementById('stu_grade').value;
+        const data = JSON.parse(localStorage.getItem(`scores_${p}_${grade}`)) || [];
+        if(!data[idx]) return null;
+        let s = 0, c = 0, d = data[idx];
+        d.tx.forEach(v => { if(v) { s += parseFloat(v); c++; } });
+        if(d.gk && d.ck) return (s + d.gk*2 + d.ck*3) / (c + 5);
+        return null;
+    }
+
+    function evaluate(gpa, subs) {
+        const tag = document.getElementById('honor-tag');
+        const rl = document.getElementById('stu_rl').value;
+        if(isNaN(gpa) || subs.length === 0) { tag.className = "honor-label"; tag.innerText = "Nhập điểm để xét học lực"; return; }
+
+        let hl = "CD";
+        if(gpa >= 8.0 && subs.every(s => s.score >= 6.5)) hl = "TOT";
+        else if(gpa >= 6.5 && subs.every(s => s.score >= 5.0)) hl = "KHA";
+        else if(gpa >= 5.0) hl = "DAT";
+
+        if(rl === "TOT" && hl === "TOT") {
+            const count9 = subs.filter(s => s.score >= 9.0).length;
+            tag.className = "honor-label rank-gold";
+            tag.innerText = count9 >= 6 ? "HỌC SINH XUẤT SẮC 🏆" : "HỌC SINH GIỎI 🥇";
+        } else if(hl === "KHA" && rl !== "CD") {
+            tag.className = "honor-label rank-blue"; tag.innerText = "HỌC SINH KHÁ 🥈";
+        } else {
+            tag.className = "honor-label";
+            const hlText = {TOT:"Tốt", KHA:"Khá", DAT:"Đạt", CD:"Chưa đạt"};
+            tag.innerText = "Học lực: " + hlText[hl];
+        }
+    }
+
+    function saveInfo() {
+        localStorage.setItem('stu_info', JSON.stringify({
+            name: document.getElementById('stu_name').value,
+            grade: document.getElementById('stu_grade').value,
+            rl: document.getElementById('stu_rl').value
+        }));
+    }
+
+    function loadScores() {
+        const grade = document.getElementById('stu_grade').value;
+        const data = JSON.parse(localStorage.getItem(`scores_${period}_${grade}`)) || [];
+        data.forEach((d, i) => {
+            const txs = document.querySelectorAll(`.i-tx[data-sub="${i}"]`);
+            if(txs.length) {
+                d.tx.forEach((v, j) => txs[j].value = v);
+                document.querySelector(`.i-gk[data-sub="${i}"]`).value = d.gk;
+                document.querySelector(`.i-ck[data-sub="${i}"]`).value = d.ck;
+            }
+        });
+        saveAndCalc();
+    }
+
+    function changeGrade() { saveInfo(); render(); }
+
+    window.onload = () => {
+        const info = JSON.parse(localStorage.getItem('stu_info'));
+        if(info) {
+            document.getElementById('stu_name').value = info.name || '';
+            document.getElementById('stu_grade').value = info.grade || '6';
+            document.getElementById('stu_rl').value = info.rl || 'TOT';
+        }
+        render();
+    };
+</script>
+
+</body>
+</html>
